@@ -1,0 +1,6 @@
+services:
+  list_inline_block.drush_command:
+    class: \Drupal\list_inline_block\Commands\GetBlockList
+    arguments: ['@database', '@entity_type.manager']
+    tags:
+      - { name: drush.command }

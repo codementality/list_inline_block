@@ -1,0 +1,7 @@
+list_inline_block.get_block:
+  path: '/admin/structure/block/list-inline-block'
+  defaults:
+    _controller: 'Drupal\list_inline_block\Controller\ListBlock::getBlock'
+    _title: 'Inline Block List'
+  requirements:
+    _permission: 'access site configuration'

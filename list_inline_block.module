@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Hook Implemenations of list_inline_block.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function list_inline_block_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.list_inline_block':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Custom Block module allows you to list the blocks used as inline blocks in Layout Builder') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Listing the Inline blocks') . '</dt>';
+      $output .= '<dd>' . t('Users with the <em>Access Content</em> permission can view the listing page as the site builder might want to know where the blocks are used by accessing the <a href=@link>Listing Page</a>.', [
+        '@link' => Url::fromRoute('list_inline_block.get_block')->toString(),
+      ]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'list_inline_block.get_block':
+      $output = '<p>' . t('Blocks belong to <a href="/block-content/types">Custom block types</a>, but Inline Blocks are those added through Layout Builder.') . '</p>';
+      return $output;
+
+  }
+}

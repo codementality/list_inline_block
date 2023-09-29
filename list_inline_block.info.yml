@@ -1,0 +1,7 @@
+name: List Inline Block (Layout Builder Blocks)
+description: Lists the blocks added through Layout Builder in UI.
+type: module
+package: Content Block
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:layout_builder

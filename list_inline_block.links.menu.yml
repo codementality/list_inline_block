@@ -1,0 +1,5 @@
+list_inline_block.list_block:
+  title: 'List Inline Blocks'
+  parent: entity.block_content.collection
+  description: 'List Inline Blocks'
+  route_name: list_inline_block.get_block
