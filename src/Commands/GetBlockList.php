@@ -29,17 +29,14 @@ class GetBlockList extends DrushCommands {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new object of \Drupal\list_inline_block\Commands\GetBlockList.
+   * Constructs a new \Drupal\list_inline_block\Commands\GetBlockList object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(
-    Connection $database,
-    EntityTypeManagerInterface $entityTypeManager
-  ) {
+  public function __construct(Connection $database, EntityTypeManagerInterface $entityTypeManager) {
     $this->database = $database;
     $this->entityTypeManager = $entityTypeManager;
   }
@@ -77,10 +74,7 @@ class GetBlockList extends DrushCommands {
       $bundle = $block->bundle();
       array_push($bundles, $bundle);
       if ($blockType == $bundle) {
-        $link = $this->t('/@type/@id', [
-          '@type' => $record->layout_entity_type,
-          '@id' => $record->layout_entity_id,
-        ]);
+        $link = '/' . $record->layout_entity_type . '/' . $record->layout_entity_id;
         $this->output()->writeln($link);
         $count = $count + 1;
       }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hook Implemenations of list_inline_block.
+ * Hook Implemenations of List Inline Block.
  */
 
 use Drupal\Core\Url;

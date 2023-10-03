@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Utility\TableSort;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class to get the table of Inline Block used in Layout Builder.
@@ -21,13 +21,6 @@ class ListBlock extends ControllerBase {
    * @var \Drupal\Core\Pager\PagerManagerInterface
    */
   protected $pagerManager;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
 
   /**
    * The database connection.
@@ -44,12 +37,10 @@ class ListBlock extends ControllerBase {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new object of ListBlock.
+   * Constructs a new \Drupal\list_inline_block\Controller\ListBlok object.
    *
    * @param \Drupal\Core\Pager\PagerManagerInterface $pagerManager
    *   The pager manager to introduce pager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack object.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -57,12 +48,10 @@ class ListBlock extends ControllerBase {
    */
   public function __construct(
     PagerManagerInterface $pagerManager,
-    RequestStack $requestStack,
     Connection $database,
     EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->pagerManager = $pagerManager;
-    $this->requestStack = $requestStack;
     $this->database = $database;
     $this->entityTypeManager = $entityTypeManager;
   }
@@ -73,7 +62,6 @@ class ListBlock extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('pager.manager'),
-      $container->get('request_stack'),
       $container->get('database'),
       $container->get('entity_type.manager')
     );
@@ -82,7 +70,7 @@ class ListBlock extends ControllerBase {
   /**
    * Functions returns a table of Inline Block.
    */
-  public function getBlock() {
+  public function getBlock(Request $request) {
     $database = $this->database;
     $query = $database->select('inline_block_usage', 'iu')
       ->fields('iu', [
@@ -130,7 +118,7 @@ class ListBlock extends ControllerBase {
       ];
       $k = $k + 1;
     }
-    $output = $this->sortList($output, $header);
+    $output = $this->sortList($output, $header, $request);
 
     $form['table'] = [
       '#type' => 'table',
@@ -153,14 +141,15 @@ class ListBlock extends ControllerBase {
    *   The array of data with inline blocks.
    * @param array $header
    *   The array of data with table definition.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
    * @param int|null $flag
    *   The flag to sort.
    *
    * @return array
    *   Returns sorted array.
    */
-  public function sortList(array $rows, array $header, $flag = SORT_STRING | SORT_FLAG_CASE) {
-    $request = $this->requestStack->getCurrentRequest();
+  public function sortList(array $rows, array $header, Request $request, $flag = SORT_STRING | SORT_FLAG_CASE) {
     $sort = TableSort::getSort($header, $request);
     foreach ($rows as $row) {
       $temp_array[] = $row['blockType'];
