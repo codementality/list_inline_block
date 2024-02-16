@@ -27,7 +27,7 @@ function list_inline_block_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'list_inline_block.get_block':
-      $output = '<p>' . t('Blocks belong to <a href="/block-content/types">Custom block types</a>, but Inline Blocks are those added through Layout Builder.') . '</p>';
+      $output = '<p>' . t('Blocks belong to <a href="/admin/structure/block-content">Custom block types</a>, but Inline Blocks are those added through Layout Builder.') . '</p>';
       return $output;
 
   }

@@ -80,56 +80,64 @@ class ListBlock extends ControllerBase {
       ]);
     $result = $query->execute()->fetchAll();
 
-    $header = [
-      [
-        'data' => $this->t('Block Type'),
-        'field' => 'blockType',
-        'sort' => 'asc',
-      ],
-      'Title' => $this->t('Title'),
-      'url' => $this->t('Link'),
-    ];
-    $output = [];
-
-    // Use the PagerManager to handle pagination.
-    $pager = $this->pagerManager->createPager(count($result), 25);
-    $pager->getCurrentPage();
-    $chunks = array_chunk($result, 25);
-    $current_page_items = $chunks[$pager->getCurrentPage()];
-    $k = 0;
-    foreach ($current_page_items as $record) {
-      $block = $this->entityTypeManager->getStorage('block_content')->load($record->block_content_id);
-      $blockType = $block->type->entity->label();
-      $node = $this->entityTypeManager->getStorage('node')->load($record->layout_entity_id);
-      $link = $this->t('<a href=/@type/@id/layout>Edit</a> (@title)', [
-        '@type' => $record->layout_entity_type,
-        '@id' => $record->layout_entity_id,
-        '@title' => $node->label(),
-      ]);
-      $title = $this->t('<a href=/@type/@id>@title</a>', [
-        '@type' => $record->layout_entity_type,
-        '@id' => $record->layout_entity_id,
-        '@title' => $block->info->value,
-      ]);
-      $output[$k] = [
-        'blockType' => $blockType,
-        'Title' => $title,
-        'url' => $link,
+    if (!empty($result)) {
+      $header = [
+        [
+          'data' => $this->t('Block Type'),
+          'field' => 'blockType',
+          'sort' => 'asc',
+        ],
+        'Title' => $this->t('Title'),
+        'url' => $this->t('Link'),
       ];
-      $k = $k + 1;
+      $output = [];
+  
+      // Use the PagerManager to handle pagination.
+      $pager = $this->pagerManager->createPager(count($result), 25);
+      $pager->getCurrentPage();
+      $chunks = array_chunk($result, 25);
+      $current_page_items = $chunks[$pager->getCurrentPage()];
+      $k = 0;
+      foreach ($current_page_items as $record) {
+        $block = $this->entityTypeManager->getStorage('block_content')->load($record->block_content_id);
+        $blockType = $block->type->entity->label();
+        $node = $this->entityTypeManager->getStorage('node')->load($record->layout_entity_id);
+        $link = $this->t('<a href=/@type/@id/layout>Edit</a> (@title)', [
+          '@type' => $record->layout_entity_type,
+          '@id' => $record->layout_entity_id,
+          '@title' => $node->label(),
+        ]);
+        $title = $this->t('<a href=/@type/@id>@title</a>', [
+          '@type' => $record->layout_entity_type,
+          '@id' => $record->layout_entity_id,
+          '@title' => $block->info->value,
+        ]);
+        $output[$k] = [
+          'blockType' => $blockType,
+          'Title' => $title,
+          'url' => $link,
+        ];
+        $k = $k + 1;
+      }
+      $output = $this->sortList($output, $header, $request);
+  
+      $form['table'] = [
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => $output,
+        '#empty' => $this->t('No blocks found'),
+      ];
+  
+      $form['pager'] = [
+        '#type' => 'pager',
+      ];
     }
-    $output = $this->sortList($output, $header, $request);
-
-    $form['table'] = [
-      '#type' => 'table',
-      '#header' => $header,
-      '#rows' => $output,
-      '#empty' => $this->t('No blocks found'),
-    ];
-
-    $form['pager'] = [
-      '#type' => 'pager',
-    ];
+    else {
+      $form['not-found'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('<h4>There is no Layout Builder Blocks created. Please create one in any Layout Builder page.</h4>')
+      ];
+    }
 
     return $form;
   }
