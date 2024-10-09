@@ -62,7 +62,7 @@ class GetBlockList extends DrushCommands {
           'layout_entity_type',
           'layout_entity_id',
         ])->isNotNull('layout_entity_id');;
-      $result = $query->execute()->fetchAll();
+      $result = $query->distinct()->execute()->fetchAll();
     }
     catch (\Exception $e) {
       $this->output()->writeln($e);
