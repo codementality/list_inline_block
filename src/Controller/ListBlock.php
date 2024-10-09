@@ -160,7 +160,7 @@ class ListBlock extends ControllerBase {
   public function sortList(array $rows, array $header, Request $request, $flag = SORT_STRING | SORT_FLAG_CASE) {
     $sort = TableSort::getSort($header, $request);
     foreach ($rows as $row) {
-      $temp_array[] = $row['blockType'];
+      $temp_array[] = $row['url'];
     }
     if ($sort == 'asc') {
       asort($temp_array, $flag);
