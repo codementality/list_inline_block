@@ -77,7 +77,7 @@ class ListBlock extends ControllerBase {
         'block_content_id',
         'layout_entity_type',
         'layout_entity_id',
-      ]);
+      ])->isNotNull('layout_entity_id');
     $result = $query->execute()->fetchAll();
 
     if (!empty($result)) {
